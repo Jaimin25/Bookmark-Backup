@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Backup",
+  "version": "1.0.0",
+  "description": "Automatically backup your bookmarks on a schedule. Never lose your bookmarks again!",
+  "permissions": ["bookmarks", "storage", "alarms", "downloads"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Bookmark Backup"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "options_page": "options.html"
+}
