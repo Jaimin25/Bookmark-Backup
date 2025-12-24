@@ -3,7 +3,7 @@ export interface BackupSettings {
   frequency: "daily" | "weekly" | "monthly" | "custom";
   customIntervalDays?: number;
   backupTime: string; // HH:MM format
-  backupDay?: number; // 0-6 for weekly, 1-31 for monthly
+  backupDay?: number | string; // 0-6 for weekly, 1-31 for monthly
   format: "json" | "html";
   autoDownload: boolean;
   storageMode: "download" | "extension"; // 'extension' stores in browser storage (no prompts!)

@@ -59,10 +59,15 @@ const SelectGroup = ({ children }: { children: React.ReactNode }) => (
 interface SelectValueProps {
   placeholder?: string;
   className?: string;
+  fallbackLabel?: string;
 }
 
 // SelectValue uses context to get the label for the current value
-const SelectValue = ({ placeholder, className }: SelectValueProps) => {
+const SelectValue = ({
+  placeholder,
+  className,
+  fallbackLabel,
+}: SelectValueProps) => {
   const context = React.useContext(SelectContext);
 
   return (
@@ -73,9 +78,9 @@ const SelectValue = ({ placeholder, className }: SelectValueProps) => {
         if (value === null || value === undefined) {
           return <span className="text-muted-foreground">{placeholder}</span>;
         }
-        // Try to get label from context, fallback to value
+        // Try to get label from context, then fallbackLabel, then value
         const label = context?.getLabel(value as string);
-        return label ?? value;
+        return label ?? fallbackLabel ?? value;
       }}
     </BaseSelect.Value>
   );
@@ -147,11 +152,41 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
     const context = React.useContext(SelectContext);
 
     // Register item value-to-label mapping
-    React.useEffect(() => {
-      if (context && typeof children === "string") {
-        context.registerItem(value, children);
+    // Extract label text from children - handle both string and ReactNode
+    const labelText = React.useMemo(() => {
+      // Direct string
+      if (typeof children === "string") {
+        return children;
       }
-    }, [context, value, children]);
+      // React element - extract from props.children
+      if (React.isValidElement(children)) {
+        const propsChildren = (children as React.ReactElement).props?.children;
+        if (typeof propsChildren === "string") {
+          return propsChildren;
+        }
+        // If props.children is an array, get first string element
+        if (Array.isArray(propsChildren)) {
+          const firstString = propsChildren.find(
+            (item) => typeof item === "string"
+          );
+          if (firstString) return firstString;
+        }
+      }
+      // Array of children - find first string
+      if (Array.isArray(children)) {
+        const firstString = children.find((item) => typeof item === "string");
+        if (firstString) return firstString;
+      }
+      // Fallback: convert to string (shouldn't happen for simple labels)
+      return String(children);
+    }, [children]);
+
+    // Register immediately - use useLayoutEffect to ensure it happens before render
+    React.useLayoutEffect(() => {
+      if (context && labelText) {
+        context.registerItem(value, labelText);
+      }
+    }, [context, value, labelText]);
 
     return (
       <BaseSelect.Item

@@ -136,6 +136,18 @@ function App() {
     value: BackupSettings[K]
   ) => {
     const newSettings = { ...settings, [key]: value };
+
+    // When frequency changes, set appropriate defaults
+    if (key === "frequency") {
+      if (value === "weekly") {
+        newSettings.backupDay = 0; // Sunday (first day)
+      } else if (value === "monthly") {
+        newSettings.backupDay = 1; // 1st of the month
+      } else if (value === "custom") {
+        newSettings.customIntervalDays = newSettings.customIntervalDays ?? 7;
+      }
+    }
+
     setSettings(newSettings);
   };
 
@@ -350,7 +362,7 @@ function App() {
                         )
                       }
                     >
-                      <SelectTrigger id="frequency" className="h-11">
+                      <SelectTrigger id="frequency" className="h-11 capitalize">
                         <SelectValue placeholder="Select frequency" />
                       </SelectTrigger>
                       <SelectContent>
@@ -389,13 +401,23 @@ function App() {
                       Day of Week
                     </Label>
                     <Select
+                      key={`weekly-day-${settings.frequency}-${
+                        settings.backupDay ?? 0
+                      }`}
                       value={String(settings.backupDay ?? 0)}
                       onValueChange={(value) =>
                         updateSetting("backupDay", parseInt(value))
                       }
                     >
                       <SelectTrigger id="day" className="h-11 max-w-xs">
-                        <SelectValue placeholder="Select day" />
+                        <SelectValue
+                          placeholder="Select day"
+                          fallbackLabel={
+                            DAYS_OF_WEEK.find(
+                              (d) => d.value === String(settings.backupDay ?? 0)
+                            )?.label
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {DAYS_OF_WEEK.map((day) => (
