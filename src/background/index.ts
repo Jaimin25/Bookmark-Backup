@@ -17,17 +17,17 @@ import { BackupHistoryItem } from "@/types";
 
 const ALARM_NAME = "bookmark-backup-alarm";
 
-// Detect Firefox (Firefox uses 'browser' namespace, also check userAgent)
-const isFirefox =
-  typeof navigator !== "undefined" && navigator.userAgent.includes("Firefox");
-
-// Convert string to Blob URL (works in Firefox background scripts)
-function createBlobUrl(content: string, mimeType: string): string {
-  const blob = new Blob([content], { type: mimeType });
-  return URL.createObjectURL(blob);
+// Convert string to base64 for data URL (used by Chrome which runs in service workers)
+function stringToBase64(str: string): string {
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
 }
 
-// Cross-browser download function
+// Download function
 async function downloadFile(
   content: string,
   filename: string,
@@ -36,18 +36,9 @@ async function downloadFile(
   saveAs: boolean = false
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    let url: string;
-    let shouldRevoke = false;
-
-    if (isFirefox) {
-      // Firefox: Use Blob URL (data URLs are blocked)
-      url = createBlobUrl(content, mimeType);
-      shouldRevoke = true;
-    } else {
-      // Chrome: Use data URL (Blob URLs don't work in service workers)
-      const base64Content = stringToBase64(content);
-      url = `data:${mimeType};base64,${base64Content}`;
-    }
+    // Use data URL (Blob URLs don't work in service workers)
+    const base64Content = stringToBase64(content);
+    const url = `data:${mimeType};base64,${base64Content}`;
 
     chrome.downloads.download(
       {
@@ -56,12 +47,7 @@ async function downloadFile(
         saveAs,
         conflictAction: "uniquify",
       },
-      (downloadId) => {
-        // Revoke Blob URL after download starts
-        if (shouldRevoke && downloadId) {
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-        }
-
+      () => {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
@@ -140,16 +126,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
 });
-
-// Convert string to base64 for data URL (used by Chrome which runs in service workers)
-function stringToBase64(str: string): string {
-  const bytes = new TextEncoder().encode(str);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
 
 async function performBackup(): Promise<{
   success: boolean;

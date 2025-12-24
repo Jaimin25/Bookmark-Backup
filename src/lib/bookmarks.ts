@@ -28,9 +28,7 @@ export function createBackupData(bookmarks: BookmarkNode[]): BackupData {
   const userAgent = navigator.userAgent;
   let browserInfo = "Unknown Browser";
   console.log(userAgent);
-  if (userAgent.includes("Firefox")) {
-    browserInfo = "Mozilla Firefox";
-  } else if (userAgent.includes("Edg")) {
+  if (userAgent.includes("Edg")) {
     browserInfo = "Microsoft Edge";
   } else if (userAgent.includes("Brave")) {
     browserInfo = "Brave Browser";

@@ -67,7 +67,7 @@ const DAYS_OF_WEEK = [
   { value: "6", label: "Saturday" },
 ];
 
-// Check if File System Access API is supported (Chrome/Edge only, not Firefox)
+// Check if File System Access API is supported (Chrome/Edge only)
 const isFileSystemAccessSupported = "showDirectoryPicker" in window;
 
 function App() {
@@ -664,9 +664,6 @@ function App() {
                           <p className="text-sm text-amber-700 dark:text-amber-400">
                             Custom folder selection is only available in Chrome
                             and Edge.
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Firefox will save backups to your Downloads folder.
                           </p>
                         </div>
                       )}

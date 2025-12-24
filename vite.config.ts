@@ -3,20 +3,14 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { copyFileSync } from "fs";
 
-const browser = process.env.BROWSER || "chrome";
-const isFirefox = browser === "firefox";
-
 export default defineConfig({
   plugins: [
     react(),
     {
       name: "copy-manifest",
       closeBundle() {
-        const manifestFile = isFirefox
-          ? "manifest.firefox.json"
-          : "manifest.json";
         copyFileSync(
-          resolve(__dirname, "public", manifestFile),
+          resolve(__dirname, "public", "manifest.json"),
           resolve(__dirname, "dist", "manifest.json")
         );
       },

@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:chrome": "cross-env BROWSER=chrome vite build",
-    "build:firefox": "cross-env BROWSER=firefox vite build",
     "preview": "vite preview",
     "generate-icons": "node scripts/generate-icons.js"
   },

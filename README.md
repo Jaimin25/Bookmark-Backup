@@ -25,7 +25,7 @@ That's it! Your bookmarks are now being backed up automatically.
 - ⏰ **Flexible Scheduling** - Choose specific times and days for backups
 - 📁 **Multiple Export Formats** - Export as JSON (detailed) or HTML (browser-compatible)
 - 🎨 **Beautiful Modern UI** - Clean interface built with React, Tailwind CSS, and shadcn/ui
-- 🌐 **Cross-Browser Support** - Works on Chrome, Firefox, Brave, Edge, and other Chromium browsers
+- 🌐 **Cross-Browser Support** - Works on Chrome, Brave, Edge, and other Chromium browsers
 
 ### Storage Options
 
@@ -43,16 +43,15 @@ That's it! Your bookmarks are now being backed up automatically.
 
 ## 🌐 Supported Browsers
 
-| Browser         | Manifest Version | Status       | Custom Folder Support    |
-| --------------- | ---------------- | ------------ | ------------------------ |
-| Google Chrome   | V3               | ✅ Supported | ✅ Yes                   |
-| Microsoft Edge  | V3               | ✅ Supported | ✅ Yes                   |
-| Brave Browser   | V3               | ✅ Supported | ✅ Yes                   |
-| Mozilla Firefox | V2/V3            | ✅ Supported | ❌ Downloads folder only |
-| Opera           | V3               | ✅ Supported | ✅ Yes                   |
-| Vivaldi         | V3               | ✅ Supported | ✅ Yes                   |
+| Browser         | Manifest Version | Status       | Custom Folder Support |
+| --------------- | ---------------- | ------------ | --------------------- |
+| Google Chrome   | V3               | ✅ Supported | ✅ Yes                |
+| Microsoft Edge  | V3               | ✅ Supported | ✅ Yes                |
+| Brave Browser   | V3               | ✅ Supported | ✅ Yes                |
+| Opera           | V3               | ✅ Supported | ✅ Yes                |
+| Vivaldi         | V3               | ✅ Supported | ✅ Yes                |
 
-**Note:** Custom folder selection uses the File System Access API, which is currently supported in Chromium-based browsers only. Firefox users can specify a subfolder within the Downloads folder.
+**Note:** Custom folder selection uses the File System Access API, which is currently supported in Chromium-based browsers only.
 
 ## Installation
 
@@ -76,12 +75,6 @@ That's it! Your bookmarks are now being backed up automatically.
 3. Click "Load unpacked"
 4. Select the `dist` folder
 
-#### Firefox
-
-1. Go to `about:debugging#/runtime/this-firefox`
-2. Click "Load Temporary Add-on"
-3. Select any file in the `dist` folder
-
 ## Development
 
 ```bash
@@ -96,9 +89,6 @@ npm run build
 
 # Build specifically for Chrome
 npm run build:chrome
-
-# Build specifically for Firefox
-npm run build:firefox
 ```
 
 ## Project Structure
@@ -107,8 +97,7 @@ npm run build:firefox
 bookmark-backup-extension/
 ├── public/
 │   ├── icons/              # Extension icons
-│   ├── manifest.json       # Chrome/Brave/Edge manifest (V3)
-│   └── manifest.firefox.json # Firefox manifest (V2)
+│   └── manifest.json       # Chrome/Brave/Edge manifest (V3)
 ├── src/
 │   ├── background/         # Background service worker
 │   ├── components/ui/      # shadcn/ui components
@@ -238,7 +227,7 @@ Your bookmarks are yours and yours alone!
 - **No backups appearing?** Check that Auto Backup is enabled and browser is open at scheduled time
 - **Download prompts?** Switch to Extension Storage mode for silent backups
 - **Storage full?** Reduce Keep Backup Count or switch to Download mode
-- **Can't select folder?** This feature requires Chrome/Edge; Firefox users use Downloads subfolder
+- **Can't select folder?** This feature requires Chrome/Edge
 
 ## 🤝 Contributing
 
