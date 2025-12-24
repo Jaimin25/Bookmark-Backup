@@ -131,21 +131,23 @@ function App() {
     await saveSettings(newSettings);
   };
 
-  const updateSetting = async <K extends keyof BackupSettings>(
+  const updateSetting = <K extends keyof BackupSettings>(
     key: K,
     value: BackupSettings[K]
   ) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
+  };
 
-    // Auto-save on change
+  const handleSaveSettings = async () => {
     try {
-      await saveSettings(newSettings);
+      await saveSettings(settings);
       chrome.runtime.sendMessage({ action: "updateSchedule" });
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 1500);
+      setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
       console.error("Failed to save settings:", error);
+      alert("Failed to save settings. Please try again.");
     }
   };
 
@@ -235,12 +237,21 @@ function App() {
                 </div>
               </div>
             </div>
-            {saveSuccess && (
-              <div className="flex items-center gap-2 text-sm text-green-600 animate-in fade-in duration-300">
-                <CheckmarkCircle02Icon className="h-4 w-4" />
-                <span>Saved</span>
-              </div>
-            )}
+            <div className="flex items-center gap-3">
+              {saveSuccess && (
+                <div className="flex items-center gap-2 text-sm text-green-600 animate-in fade-in duration-300">
+                  <CheckmarkCircle02Icon className="h-4 w-4" />
+                  <span>Saved</span>
+                </div>
+              )}
+              <Button
+                onClick={handleSaveSettings}
+                className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700"
+              >
+                <CheckmarkCircle02Icon className="h-4 w-4 mr-2" />
+                Save Settings
+              </Button>
+            </div>
           </div>
         </div>
       </div>
